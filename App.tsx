@@ -1,66 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View, TextInput, Text, Button, TouchableOpacity } from 'react-native';
+import React, {useState} from 'react';
+import { SafeAreaView } from 'react-native';
+import {TabView, SceneMap } from 'react-native-tab-view';
+import Calculator from './components/Calculator';
+import FilmTable from './components/FilmsTable';
 
 export default function App() {
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'calculator', title: 'Calculator' },
+    { key: 'table', title: 'Table' },
+  ]);
 
-  const [first, setFirst] = useState(0);
-  const [second, setSecond] = useState(0);
-  const [plus, setPlus] = useState<any>(null);
+  const renderScene = SceneMap({
+    calculator: Calculator,
+    table: FilmTable,
+  });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View style={styles.rowContainer}>
-          <Text>First number</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Numeric Values Only"
-            placeholderTextColor="#60605e"
-            keyboardType={'numeric'}
-            onChangeText={(text) => { setFirst(Number(text)) }}
-          />
-        </View>
-        <View style={styles.rowContainer}>
-          <Text>Second number</Text>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Enter Numeric Values Only"
-            placeholderTextColor="#60605e"
-            keyboardType={'numeric'}
-            onChangeText={(text) => { setSecond(Number(text)) }}
-          />
-        </View>
-        <View style={styles.rowContainer}>
-          <Button title="Sum" onPress={(ev) => setPlus(first + second)} />
-        </View>
-
-        <View style={styles.rowContainer}>
-          {plus !== null && (<Text>The sum is: {plus}</Text>)}
-        </View>
-      </View>
+    <SafeAreaView style={{flex: 1}}>
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: 320 }}
+        />
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: '#ffffff',
-    flexDirection: "column",
-    padding: 16,
-    marginTop: 100,
-  },
-  rowContainer: {
-    flexDirection: "column",
-    width: '100%',
-    marginBottom: 16
-  },
-
-  textInput: {
-    width: '100%',
-    backgroundColor: '#dde8c9',
-    padding: 16,
-  }, 
-});
